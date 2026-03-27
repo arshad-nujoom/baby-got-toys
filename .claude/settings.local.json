@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"/Users/arshad.nujoom/Claude Apps/Baby Got Toys/app\")",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack --no-react-compiler)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npx tsx:*)",
+      "Bash(node -e \"const m = require\\(''/Users/arshad.nujoom/Claude Apps/Baby Got Toys/app/node_modules/@prisma/adapter-libsql''\\); console.log\\(Object.keys\\(m\\)\\)\")",
+      "Bash(node -e \"const {createClient} = require\\(''/Users/arshad.nujoom/Claude Apps/Baby Got Toys/app/node_modules/@libsql/client''\\); const c = createClient\\({url: ''file:/Users/arshad.nujoom/Claude Apps/Baby Got Toys/app/prisma/dev.db''}\\); console.log\\(''OK'', c\\)\")",
+      "Bash(node -e \"const path = require\\(''path''\\); const p = path.resolve\\(''/Users/arshad.nujoom/Claude Apps/Baby Got Toys/app'', ''prisma/dev.db''\\); console.log\\(''file:'' + p\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(npm run:*)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}
