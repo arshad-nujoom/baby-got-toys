@@ -5,8 +5,7 @@
       "name": "baby-got-toys",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "port": 3000,
-      "cwd": "/Users/arshad.nujoom/Claude Apps/Baby Got Toys/app"
+      "port": 3000
     }
   ]
 }
