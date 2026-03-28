@@ -1,0 +1,191 @@
+import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
+import path from "path";
+
+const dbPath = path.resolve(process.cwd(), "dev.db");
+const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
+const prisma = new PrismaClient({ adapter } as never);
+
+const listings = [
+  {
+    title: "Fisher-Price Rainforest Activity Gym",
+    description: "Barely used baby gym with hanging toys. Lights and music work perfectly. Suitable for newborns to 6 months. All pieces included.",
+    category: "toys",
+    condition: "like-new",
+    area: "Pattom",
+    donorName: "Asha Nair",
+    donorPhone: "9876543210",
+    donorWhatsapp: "9876543210",
+    ageGroup: "0-1",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_001",
+  },
+  {
+    title: "Wooden blocks set (50 pieces)",
+    description: "Classic coloured wooden blocks, good quality. My son used these for about a year. All pieces present, no broken or splintered blocks.",
+    category: "toys",
+    condition: "good",
+    area: "Kowdiar",
+    donorName: "Rajan Pillai",
+    donorPhone: "9845672310",
+    ageGroup: "1-3",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_002",
+  },
+  {
+    title: "Nursery cradle with mattress",
+    description: "Solid wood cradle that rocks. Used for 4 months only. Mattress is clean and included. Pickup only — a bit heavy to carry.",
+    category: "cradles",
+    condition: "like-new",
+    area: "Vazhuthacaud",
+    donorName: "Meera Thomas",
+    donorPhone: "9961234567",
+    donorWhatsapp: "9961234567",
+    ageGroup: "0-1",
+    feeAmount: 30,
+    feePaid: true,
+    paymentId: "seed_003",
+  },
+  {
+    title: "Baby cot with storage drawer",
+    description: "Full-size baby cot with drawer underneath for storage. Used for about 1 year. Sturdy, no damage. Can be assembled/disassembled.",
+    category: "cradles",
+    condition: "good",
+    area: "Ulloor",
+    donorName: "Sreeja Kumar",
+    donorPhone: "9895001122",
+    ageGroup: "0-1",
+    feeAmount: 30,
+    feePaid: true,
+    paymentId: "seed_004",
+  },
+  {
+    title: "Bundle of newborn-to-3-month girl clothes",
+    description: "Around 15 pieces — onesies, frocks, pyjamas. All washed and clean. Light colours, some pink. Daughter barely wore most of them.",
+    category: "clothes",
+    condition: "like-new",
+    area: "Kesavadasapuram",
+    donorName: "Divya Menon",
+    donorPhone: "9447889900",
+    donorWhatsapp: "9447889900",
+    ageGroup: "0-1",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_005",
+  },
+  {
+    title: "Boy clothes 1-2 years (mixed bundle)",
+    description: "About 20 pieces — t-shirts, trousers, shorts, a few night suits. All in good wearable condition. Mixed brands.",
+    category: "clothes",
+    condition: "good",
+    area: "Sreekaryam",
+    donorName: "Priya George",
+    donorPhone: "9847001234",
+    ageGroup: "1-3",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_006",
+  },
+  {
+    title: "Tiny steps walker shoes — size 18 (12-18 months)",
+    description: "Soft sole pre-walker shoes, barely worn. Beige colour, velcro strap. Great for first steps. Washed.",
+    category: "shoes",
+    condition: "like-new",
+    area: "Kazhakuttom",
+    donorName: "Anitha Suresh",
+    donorPhone: "9746223344",
+    donorWhatsapp: "9746223344",
+    ageGroup: "1-3",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_007",
+  },
+  {
+    title: "Kids rain boots — size 28 (3-4 years)",
+    description: "Red rubber rain boots with frog design. Used for one monsoon season. In great shape.",
+    category: "shoes",
+    condition: "good",
+    area: "Vattiyoorkavu",
+    donorName: "Suresh Babu",
+    donorPhone: "9995566778",
+    ageGroup: "3-6",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_008",
+  },
+  {
+    title: "Big bundle of story books (ages 3-7)",
+    description: "Around 25 picture and story books — includes Panchatantra, Tenali Raman, fairy tales, and some English learning books. All readable, no torn pages.",
+    category: "books",
+    condition: "good",
+    area: "Nanthancode",
+    donorName: "Lekha Krishnan",
+    donorPhone: "9961009876",
+    donorWhatsapp: "9961009876",
+    ageGroup: "3-6",
+    feeAmount: 20,
+    feePaid: true,
+    paymentId: "seed_009",
+  },
+  {
+    title: "10 unused Big Size Drawing Books",
+    description: "Brand new, never opened A3 drawing books — 10 pieces. Bought in bulk, my daughter switched to smaller ones. Perfect for school or art class.",
+    category: "books",
+    condition: "like-new",
+    area: "Sasthamangalam",
+    donorName: "Vijayan K",
+    donorPhone: "9447001122",
+    ageGroup: "any",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_010",
+  },
+  {
+    title: "Magnetic drawing board (Magna Doodle)",
+    description: "Classic magna doodle style magnetic drawing board. Hours of fun. Erases cleanly. No battery needed.",
+    category: "toys",
+    condition: "good",
+    area: "Thiruvallam",
+    donorName: "Bindu Prakash",
+    donorPhone: "9746889922",
+    ageGroup: "1-3",
+    feeAmount: 10,
+    feePaid: true,
+    paymentId: "seed_011",
+  },
+  {
+    title: "LEGO Duplo starter set (35 pieces)",
+    description: "Duplo blocks, all genuine LEGO. Washed and checked. All pieces accounted for. Great for building imagination.",
+    category: "toys",
+    condition: "good",
+    area: "Palayam",
+    donorName: "Thomas Jacob",
+    donorPhone: "9847233445",
+    donorWhatsapp: "9847233445",
+    ageGroup: "1-3",
+    feeAmount: 20,
+    feePaid: true,
+    paymentId: "seed_012",
+  },
+];
+
+async function main() {
+  console.log("Seeding database...");
+  await prisma.listing.deleteMany();
+  for (const data of listings) {
+    await prisma.listing.create({
+      data: {
+        ...data,
+        photos: JSON.stringify([]),
+        status: "available",
+      },
+    });
+  }
+  console.log(`Seeded ${listings.length} listings.`);
+}
+
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
