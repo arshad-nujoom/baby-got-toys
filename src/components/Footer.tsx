@@ -31,7 +31,7 @@ export default function Footer() {
               <li><Link href="/donate" className="hover:text-amber-700">Donate an item</Link></li>
             </ul>
             <p className="text-xs text-gray-400 mt-4">
-              A small ₹10–30 maintenance fee from donors helps keep the platform running. Recipients pay nothing.
+              A small ₹10–30 maintenance fee from recipients helps keep the platform running. Donors pay nothing.
             </p>
           </div>
         </div>
