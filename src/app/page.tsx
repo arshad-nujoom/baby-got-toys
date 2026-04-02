@@ -44,7 +44,7 @@ export default async function HomePage() {
           </div>
           <div>
             <div className="text-2xl font-bold text-amber-700">₹0</div>
-            <div className="text-xs text-gray-500 mt-0.5">cost for recipients</div>
+            <div className="text-xs text-gray-500 mt-0.5">cost for donors</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-amber-700">5</div>
@@ -87,9 +87,9 @@ export default async function HomePage() {
           <p className="text-gray-500 text-sm mb-10 text-center">Simple, zero-overhead, community-first</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { step: "1", icon: "📦", title: "Donor lists an item", desc: "Post photos, describe the condition, and set your Trivandrum area. Pay a small ₹10–30 listing fee." },
-              { step: "2", icon: "🔍", title: "Recipient browses", desc: "Browse by category or area. Totally free. No account needed." },
-              { step: "3", icon: "📞", title: "Direct contact", desc: "Reach out to the donor directly via phone or WhatsApp to fix a pickup time." },
+              { step: "1", icon: "📦", title: "Donor lists an item", desc: "Post photos, describe the condition, and set your Trivandrum area." },
+              { step: "2", icon: "🔍", title: "Recipient browses", desc: "Browse by category or area. No account needed." },
+              { step: "3", icon: "📞", title: "Direct contact", desc: "Reach out to the donor directly via phone or WhatsApp. Pay a small ₹10–30 token fee to confirm the pickup slot — a guarantee for both sides." },
               { step: "4", icon: "🏠", title: "Collect at home", desc: "Visit the donor's address at the agreed time and collect the item. No middlemen, no delivery." },
             ].map(({ step, icon, title, desc }) => (
               <div key={step} className="bg-white rounded-2xl p-5 border border-amber-100 relative">

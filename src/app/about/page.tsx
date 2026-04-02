@@ -41,9 +41,9 @@ export default function AboutPage() {
           <h2 className="text-xl font-bold text-gray-800 mb-4">How it works — simply</h2>
           <div className="space-y-4">
             {[
-              { icon: "📦", title: "Donors list items", desc: "Parents post items their child has outgrown — toys, cradles, shoes, clothes, drawing books — with photos and a description. A small ₹10–30 maintenance fee keeps the platform running." },
-              { icon: "🔍", title: "Recipients browse for free", desc: "Any family in need can browse by category and find what they need. No account, no fees, no middleman." },
-              { icon: "📞", title: "Direct contact", desc: "The recipient contacts the donor directly via phone or WhatsApp. They agree on a time to collect." },
+              { icon: "📦", title: "Donors list items", desc: "Parents post items their child has outgrown — toys, cradles, shoes, clothes, drawing books — with photos and a description. Free to list." },
+              { icon: "🔍", title: "Recipients browse for free", desc: "Browse by category and find what you need. No account needed." },
+              { icon: "📞", title: "Direct contact", desc: "The recipient contacts the donor via phone or WhatsApp and pays a small ₹10–30 token fee to confirm the pickup — a guarantee of intent for both sides." },
               { icon: "🏠", title: "Collect at home", desc: "The recipient comes to the donor's home and collects the item. Zero overhead. Zero delivery cost. Zero warehouse." },
             ].map(({ icon, title, desc }) => (
               <div key={title} className="flex gap-4">
@@ -60,7 +60,7 @@ export default function AboutPage() {
         <section>
           <h2 className="text-xl font-bold text-gray-800 mb-3">The economics</h2>
           <p className="text-gray-700 text-sm leading-relaxed">
-            We charge donors a small maintenance fee of ₹10 to ₹30 per listing. That&apos;s it. Recipients pay absolutely nothing. This model means:
+            Recipients pay a small ₹10–30 token fee when confirming a pickup — that's it. Donors list for free. This model means:
           </p>
           <ul className="mt-3 space-y-2 text-sm text-gray-600">
             <li className="flex gap-2"><span className="text-amber-500">✓</span> Donors are incentivised to list thoughtfully (not spam)</li>

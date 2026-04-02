@@ -2,9 +2,9 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { CATEGORIES, CONDITIONS, AGE_GROUPS, TRIVANDRUM_AREAS, FEE_OPTIONS } from "@/lib/constants";
+import { CATEGORIES, CONDITIONS, AGE_GROUPS, TRIVANDRUM_AREAS } from "@/lib/constants";
 
-type Step = "details" | "contact" | "payment" | "done";
+type Step = "details" | "contact" | "done";
 
 export default function DonateForm() {
   const router = useRouter();
@@ -25,18 +25,14 @@ export default function DonateForm() {
     donorName: "",
     donorPhone: "",
     donorWhatsapp: "",
-    feeAmount: 10,
   });
 
-  const set = (k: keyof typeof form, v: string | number) =>
+  const set = (k: keyof typeof form, v: string) =>
     setForm((prev) => ({ ...prev, [k]: v }));
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []).slice(0, 4);
-    const previews = files.map((f) => URL.createObjectURL(f));
-    setPreviewUrls(previews);
-
-    // Upload files
+    setPreviewUrls(files.map((f) => URL.createObjectURL(f)));
     const uploaded: string[] = [];
     for (const file of files) {
       const fd = new FormData();
@@ -72,68 +68,27 @@ export default function DonateForm() {
     setStep("contact");
   };
 
-  const handleContactNext = () => {
+  const handleSubmit = async () => {
     const err = validateContact();
     if (err) { setError(err); return; }
     setError("");
-    setStep("payment");
-  };
-
-  const handlePayment = async () => {
     setLoading(true);
-    setError("");
-
     try {
-      // Create the listing first
       const res = await fetch("/api/listings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, photos: uploadedPhotos }),
+        body: JSON.stringify({ ...form, feeAmount: 10, photos: uploadedPhotos }),
       });
-
       if (!res.ok) throw new Error("Failed to create listing");
       const { listing } = await res.json();
-
-      // Load Razorpay (or simulate in dev)
-      if (process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
-        const orderRes = await fetch("/api/payment/order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: form.feeAmount, listingId: listing.id }),
-        });
-        const order = await orderRes.json();
-
-        const Razorpay = (window as unknown as { Razorpay: new (opts: unknown) => { open: () => void } }).Razorpay;
-        const rzp = new Razorpay({
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-          amount: order.amount,
-          currency: "INR",
-          name: "Baby Got Toys",
-          description: `Listing fee for: ${form.title}`,
-          order_id: order.id,
-          handler: async (response: { razorpay_payment_id: string }) => {
-            await fetch(`/api/listings/${listing.id}/pay`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ paymentId: response.razorpay_payment_id }),
-            });
-            setStep("done");
-            setTimeout(() => router.push(`/listing/${listing.id}`), 2000);
-          },
-          prefill: { name: form.donorName, contact: form.donorPhone },
-          theme: { color: "#d97706" },
-        });
-        rzp.open();
-      } else {
-        // Dev mode: simulate payment
-        await fetch(`/api/listings/${listing.id}/pay`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ paymentId: `dev_${Date.now()}` }),
-        });
-        setStep("done");
-        setTimeout(() => router.push(`/listing/${listing.id}`), 2000);
-      }
+      // Donors list for free — activate immediately
+      await fetch(`/api/listings/${listing.id}/pay`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentId: "donor_free" }),
+      });
+      setStep("done");
+      setTimeout(() => router.push(`/listing/${listing.id}`), 2000);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -155,13 +110,13 @@ export default function DonateForm() {
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
       {/* Step indicator */}
       <div className="flex border-b border-gray-100">
-        {(["details", "contact", "payment"] as Step[]).map((s, i) => (
+        {(["details", "contact"] as Step[]).map((s, i) => (
           <div key={s} className={`flex-1 py-3 text-center text-xs font-medium border-b-2 transition-colors ${
             step === s ? "border-amber-500 text-amber-600" :
-            ["details", "contact", "payment"].indexOf(step) > i ? "border-green-400 text-green-600" :
+            ["details", "contact"].indexOf(step) > i ? "border-green-400 text-green-600" :
             "border-transparent text-gray-400"
           }`}>
-            {i + 1}. {s.charAt(0).toUpperCase() + s.slice(1)}
+            {i + 1}. {s === "details" ? "Item details" : "Your contact"}
           </div>
         ))}
       </div>
@@ -305,7 +260,7 @@ export default function DonateForm() {
         {step === "contact" && (
           <div className="space-y-4">
             <p className="text-sm text-gray-500">
-              Your contact details will be shown to potential recipients so they can arrange pickup directly with you.
+              Your contact details will be shown to recipients after they confirm pickup. Listing is completely free for you.
             </p>
 
             <div>
@@ -347,6 +302,12 @@ export default function DonateForm() {
               </div>
             </div>
 
+            <div className="bg-green-50 border border-green-100 rounded-xl p-4 text-xs text-green-800 space-y-1">
+              <div>✓ Listing is completely free for donors</div>
+              <div>✓ Recipients pay a small ₹10–30 token fee when they confirm pickup</div>
+              <div>✓ Your item goes live immediately after submission</div>
+            </div>
+
             <div className="flex gap-3">
               <button
                 type="button"
@@ -357,78 +318,13 @@ export default function DonateForm() {
               </button>
               <button
                 type="button"
-                onClick={handleContactNext}
-                className="flex-2 flex-1 bg-amber-500 hover:bg-amber-600 text-white font-semibold py-3 rounded-xl transition-colors"
-              >
-                Next: Pay listing fee →
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Payment */}
-        {step === "payment" && (
-          <div className="space-y-5">
-            <div className="bg-gray-50 rounded-xl p-4 text-sm">
-              <div className="font-semibold text-gray-700 mb-2">Listing summary</div>
-              <div className="space-y-1 text-gray-600">
-                <div>{CATEGORIES.find((c) => c.slug === form.category)?.emoji} <strong>{form.title}</strong></div>
-                <div className="text-xs text-gray-400">{form.area}, Trivandrum · {form.donorName}</div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Choose listing fee</label>
-              <div className="flex gap-3">
-                {FEE_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => set("feeAmount", opt.value)}
-                    className={`flex-1 py-3 rounded-xl border text-sm font-semibold transition-all ${
-                      form.feeAmount === opt.value
-                        ? "border-amber-500 bg-amber-50 text-amber-700"
-                        : "border-gray-200 text-gray-600 hover:border-amber-200"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-2">
-                This small fee covers platform maintenance. Recipients pay nothing.
-              </p>
-            </div>
-
-            <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 text-xs text-amber-800 space-y-1">
-              <div>✓ Your item will be listed immediately after payment</div>
-              <div>✓ Recipients will contact you directly to arrange pickup</div>
-              <div>✓ You choose who gets the item and when</div>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setStep("contact")}
-                className="flex-1 border border-gray-200 text-gray-600 font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm"
-              >
-                ← Back
-              </button>
-              <button
-                type="button"
-                onClick={handlePayment}
+                onClick={handleSubmit}
                 disabled={loading}
                 className="flex-1 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-colors"
               >
-                {loading ? "Processing…" : `Pay ₹${form.feeAmount} & List`}
+                {loading ? "Listing…" : "List for free →"}
               </button>
             </div>
-
-            {!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && (
-              <p className="text-center text-xs text-gray-400">
-                Dev mode: payment is simulated
-              </p>
-            )}
           </div>
         )}
       </div>

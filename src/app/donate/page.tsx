@@ -2,7 +2,7 @@ import DonateForm from "./DonateForm";
 
 export const metadata = {
   title: "Donate an item — Baby Got Toys",
-  description: "List a kids' item for donation in Trivandrum. Pay a small ₹10–30 maintenance fee to keep the platform running.",
+  description: "List a kids' item for donation in Trivandrum. Free to list — recipients pay a small ₹10–30 pickup confirmation fee.",
 };
 
 export default function DonatePage() {
@@ -12,7 +12,7 @@ export default function DonatePage() {
         <div className="text-4xl mb-3">📦</div>
         <h1 className="text-3xl font-bold text-gray-800">Donate an item</h1>
         <p className="text-gray-500 text-sm mt-2 max-w-md mx-auto">
-          List something your child has outgrown. A small ₹10–30 maintenance fee helps us keep the platform running. Recipients get it for free.
+          List something your child has outgrown — completely free. Recipients pay a small ₹10–30 token fee when they confirm pickup.
         </p>
       </div>
 
